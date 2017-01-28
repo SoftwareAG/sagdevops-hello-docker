@@ -1,0 +1,39 @@
+version: "2"
+
+services:
+  cce:
+    image: sagdevops/cce:9.12
+    ports:
+      - "8091:8091"
+
+  n1:
+    image: sagdevops/spm:9.12
+  n2:
+    image: sagdevops/spm:9.12
+
+  db:
+    image: wnameless/oracle-xe-11g:16.04
+    ports: 
+      - "49160:22"
+      - "49161:1521"
+    environment: 
+      - ORACLE_ALLOW_REMOTE=true
+
+  regn1:
+    image: sagdevops/cli:9.12
+    environment: 
+      CC_SERVER: cce
+    command: 
+      sagcc add landscape nodes alias=n1 url=https://n1:8093 -e 200
+    depends_on: 
+      - n1
+      - cce
+  regn2:
+    image: sagdevops/cli:9.12
+    environment: 
+      CC_SERVER: cce
+    command: 
+      sagcc add landscape nodes alias=n2 url=https://n2:8093 -e 200
+    depends_on: 
+      - n2
+      - cce
