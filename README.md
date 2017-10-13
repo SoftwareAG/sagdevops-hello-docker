@@ -103,7 +103,7 @@ You can build custom images with Software AG software using
 ```softwareag/commandcentral:10.1.0.1-builder``` image and 
 Command Central templates.
 
-Please see [Command Central Docker builder]() project.
+Please see [Command Central Docker builder](https://github.com/SoftwareAG/sagdevops-cc-docker-builder) project.
 
 _______________
 Contact us at [TECHcommunity](mailto:technologycommunity@softwareag.com?subject=Github/SoftwareAG) if you have any questions.
