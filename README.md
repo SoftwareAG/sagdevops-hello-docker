@@ -1,56 +1,106 @@
-# Command Central basic Docker use for infrastructure testing
+# Command Central Docker images
 
-## Required tools
+## Starting a default Command Central server
 
-* [Docker engine](https://www.docker.com/products/overview)
-  * [Docker toolbox](https://docs.docker.com/toolbox/toolbox_install_windows/) for older Windows
-* [Docker compose](https://docs.docker.com/compose/install/)
-
-## Run Command Central container
+You can start new Command Central server by running the container:
 
 ```bash
-docker-compose up -d cce
+docker run --name cc -d -p 8091 softwareag/commandcentral:10.1.0.1-server
 ```
-Open [Command Central Web UI](https://localhost:8091)
 
-NOTE: if you use Toolbox, replace localhost with the docker VM IP address
-
-Login as Administrator/manage
-
-## Add empty landscape nodes
-
-Add an empty managed node
+Run ```docker port cc``` command to find out its published port
 
 ```bash
-docker-compose run --rm regn1
+8091/tcp -> 0.0.0.0:32769
 ```
 
-Check [Installations tab](https://localhost:8091/cce/web/#environment:ALL/t/1)
-Registered n1 node will come online in about a minute or less
+This will start up an empty Command Central with the HTTPS port exposed.
+Open published port in the browser, for example https://0.0.0.0:32769/ 
+to see Command Central login page
 
-## Add database
+Default login credentials are Administrator/manage.
 
-Add Oracle database
+NOTE it will take up to a minute for the server to start accepting HTTP requests.
+
+## Registering an existing Software AG installation
+
+You can connect any 9.x or 10.x Software AG installation that has a running Software AG Platform Manager (SPM).
+
+Simply point to SPM host:port by running:
 
 ```bash
-docker-compose up -d db
+docker exec cc sagcc add landscape nodes alias=mynode1 url=http://IP:8092 -e 200
 ```
-Connection URL: ```jdbc:wm:oracle://localhost:1521;SID=xe```
-DBA credentials: system/oracle
 
+If this is succesfull the output will be ```200 OK```
 
-## All up
+Your Command Central Web UI now shows this node under Installations and all
+discovered managed instances under Instances tab.
+
+## Launching a new empty Software AG installation
+
+For development or testing purposes you can launch and empty Software AG managed installation.
+
+Run Command Central node container with a link to 'cc' container
 
 ```bash
-docker-compose up -d
-docker-compose ps
+docker run --name n1 -d -P --link cc softwareag/commandcentral:10.1.0.1-node
 ```
 
-## Cleanup
+By default node container will auto register itself with Command Central using
+container's internal id.
+
+Your Command Central Web UI now shows this new node under Installations but
+it is OFFLINE because of UnknownHostException.
+This is because Command Central container does 'see' node container as they do not share the same network.
+
+Connect both containers to the same network:
 
 ```bash
-docker-compose down
+docker network create
+docker network connect cc cc
+docker network connect cc n1
 ```
+
+After a minute or the newly connected node change its status to green (ONLINE).
+
+## Using compose files for defining complex dev and test environments
+
+```bash
+docker-compose run --rm init
+```
+
+When it's done running open [Command Central Web UI](https://0.0.0.0:8091)
+
+Command Central will have two nodes:
+
+* one auto-registered with container id as node alias
+* second one registered with as 'test2'
+
+After a minute or so they both will come online
+
+Install, patch, configure and use Software AG software on these
+test nodes. Recycle them when no longer needed:
+
+```bash
+docker-compose stop test1 test2
+docker-compose rm test1 test2
+```
+
+## Configuring Command Central
+
+You can automatically configure your Command Central with everything
+you need to perform provisioning, migration and maintenace of your
+Software AG landscape.
+
+Please see [Command Central](https://github.com/SoftwareAG/sagdevops-cc-server) project Docker secion for details.
+
+## Building Docker images usign Command Central Builder
+
+You can build custom images with Softweare AG software using
+```softwareag/commandcentral:10.1.0.1-builder``` image.
+
+Please see [Command Central Docker builder]() project.
 
 _______________
 DISCLAIMER

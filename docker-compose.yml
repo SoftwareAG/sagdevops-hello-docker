@@ -1,39 +1,39 @@
-version: "2"
+version: "3"
 
 services:
-  cce:
-    image: sagdevops/cce:9.12
+  cc:
+    image: softwareag/commandcentral:10.1.0.1-server
     ports:
+      - "8090:8090"
       - "8091:8091"
-
-  n1:
-    image: sagdevops/spm:9.12
-  n2:
-    image: sagdevops/spm:9.12
-
-  db:
-    image: wnameless/oracle-xe-11g:16.04
-    ports: 
-      - "49160:22"
-      - "49161:1521"
-    environment: 
-      - ORACLE_ALLOW_REMOTE=true
-
-  regn1:
-    image: sagdevops/cli:9.12
-    environment: 
-      CC_SERVER: cce
-    command: 
-      sagcc add landscape nodes alias=n1 url=https://n1:8093 -e 200
+    environment:
+      - CC_PASSWORD
+      
+  test1:
+    image: softwareag/commandcentral:10.1.0.1-node
+    ports:
+      - "5555:5555" # IS
+      - "9000:9000" # UM
+      - "8585:8585" # MWS
+      - "8072:8072" # Applatform
+    environment:
+      - CC_AUTO_REGISTER=1 # auto-registration
     depends_on: 
-      - n1
-      - cce
-  regn2:
-    image: sagdevops/cli:9.12
-    environment: 
-      CC_SERVER: cce
-    command: 
-      sagcc add landscape nodes alias=n2 url=https://n2:8093 -e 200
+      - cc
+
+  test2:
+    image: softwareag/commandcentral:10.1.0.1-node
+    environment:
+      - CC_AUTO_REGISTER=0 # no auto-registration
     depends_on: 
-      - n2
-      - cce
+      - cc
+
+  init:
+    image: softwareag/commandcentral:10.1.0.1-server
+    environment: 
+      CC_SERVER: cc
+    command: # any client command againt a remote server
+      sagcc add landscape nodes alias=test2 url=https://test2:8093 -e 200
+    depends_on: 
+      - test2
+      - cc
