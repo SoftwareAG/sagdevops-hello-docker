@@ -14,11 +14,11 @@ Run ```docker port cc``` command to find out its published port
 8091/tcp -> 0.0.0.0:32769
 ```
 
-This will start up an empty Command Central with the HTTPS port exposed.
+This will start an empty Command Central with the HTTPS port exposed.
 Open published port in the browser, for example https://0.0.0.0:32769/ 
-to see Command Central login page
+to see Command Central login page.
 
-Default login credentials are Administrator/manage.
+Login with default credentials as Administrator/manage.
 
 NOTE it will take up to a minute for the server to start accepting HTTP requests.
 
@@ -26,20 +26,19 @@ NOTE it will take up to a minute for the server to start accepting HTTP requests
 
 You can connect any 9.x or 10.x Software AG installation that has a running Software AG Platform Manager (SPM).
 
-Simply point to SPM host:port by running:
+Simply point to running SPM host:port:
 
 ```bash
-docker exec cc sagcc add landscape nodes alias=mynode1 url=http://IP:8092 -e 200
+docker exec cc sagcc add landscape nodes alias=mynode1 url=http://IP:8092 -e OK
 ```
 
-If this is succesfull the output will be ```200 OK```
+Succesfull registration will report ```200 OK```
 
-Your Command Central Web UI now shows this node under Installations and all
-discovered managed instances under Instances tab.
+Command Central Web UI will show this managed node under Installations tab with all discovered managed instances under Instances tab.
 
 ## Launching a new empty Software AG installation
 
-For development or testing purposes you can launch and empty Software AG managed installation.
+For development or testing purposes you can launch an empty Software AG managed installation.
 
 Run Command Central node container with a link to 'cc' container
 
@@ -50,34 +49,37 @@ docker run --name n1 -d -P --link cc softwareag/commandcentral:10.1.0.1-node
 By default node container will auto register itself with Command Central using
 container's internal id.
 
-Your Command Central Web UI now shows this new node under Installations but
-it is OFFLINE because of UnknownHostException.
-This is because Command Central container does 'see' node container as they do not share the same network.
+Command Central Web UI will show this new node under Installations but it will be OFFLINE (UnknownHostException) because Command Central container does not 'see' node container.
 
 Connect both containers to the same network:
 
 ```bash
-docker network create
-docker network connect cc cc
-docker network connect cc n1
+docker network create ccnet
+docker network connect ccnet cc
+docker network connect ccnet n1
 ```
 
-After a minute or the newly connected node change its status to green (ONLINE).
+After a minute or so the managed node status will change to green (ONLINE).
 
-## Using compose files for defining complex dev and test environments
+## Using docker-compose files for dev and test environments
+
+Run example init service from ```docker-compose.yml``` file:
 
 ```bash
 docker-compose run --rm init
 ```
 
+The init service will bring up Command Central container and two
+test managed nodes.
+
 When it's done running open [Command Central Web UI](https://0.0.0.0:8091)
 
-Command Central will have two nodes:
+Command Central will show two nodes:
 
 * one auto-registered with container id as node alias
 * second one registered with as 'test2'
 
-After a minute or so they both will come online
+After a minute or so they both will come online.
 
 Install, patch, configure and use Software AG software on these
 test nodes. Recycle them when no longer needed:
@@ -95,10 +97,11 @@ Software AG landscape.
 
 Please see [Command Central](https://github.com/SoftwareAG/sagdevops-cc-server) project Docker secion for details.
 
-## Building Docker images usign Command Central Builder
+## Building Docker images using Command Central Builder
 
-You can build custom images with Softweare AG software using
-```softwareag/commandcentral:10.1.0.1-builder``` image.
+You can build custom images with Software AG software using
+```softwareag/commandcentral:10.1.0.1-builder``` image and 
+Command Central templates.
 
 Please see [Command Central Docker builder]() project.
 
