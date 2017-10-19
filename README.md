@@ -1,11 +1,29 @@
 # Command Central Docker images
 
+## Configuration
+
+Login to Docker Store with your Docker ID, open https://store.docker.com/images/softwareag-commandcentral and accept license agreement to get access
+to Command Central images.
+
+Login to Docker with your Docker ID from your console and verify you can download the images:
+
+```bash
+docker login
+docker pull store/softwareag/commandcentral:10.1.0.1-server
+```
+
 ## Starting a default Command Central server
+
+Create a Docker network for the components to communicate
+
+```bash
+docker network create ccnetwork
+```
 
 You can start new Command Central server by running the container:
 
 ```bash
-docker run --name cc -d -p 8091 softwareag/commandcentral:10.1.0.1-server
+docker run --name cc -d -p 8091 --network ccnetwork softwareag/commandcentral:10.1.0.1-server
 ```
 
 Run ```docker port cc``` command to find out its published port
@@ -40,24 +58,14 @@ Command Central Web UI will show this managed node under Installations tab with 
 
 For development or testing purposes you can launch an empty Software AG managed installation.
 
-Run Command Central node container with a link to 'cc' container
+Run Command Central node container on the 'ccnetwork' network:
 
 ```bash
-docker run --name n1 -d -P --link cc softwareag/commandcentral:10.1.0.1-node
+docker run --name n1 -d -P --network ccnetwork softwareag/commandcentral:10.1.0.1-node
 ```
 
 By default node container will auto register itself with Command Central using
 container's internal id.
-
-Command Central Web UI will show this new node under Installations but it will be OFFLINE (UnknownHostException) because Command Central container does not 'see' node container.
-
-Connect both containers to the same network:
-
-```bash
-docker network create ccnet
-docker network connect ccnet cc
-docker network connect ccnet n1
-```
 
 After a minute or so the managed node status will change to green (ONLINE).
 
@@ -100,8 +108,7 @@ Please see [Command Central](https://github.com/SoftwareAG/sagdevops-cc-server) 
 ## Building Docker images using Command Central Builder
 
 You can build custom images with Software AG software using
-```softwareag/commandcentral:10.1.0.1-builder``` image and 
-Command Central templates.
+softwareag/commandcentral:10.1.0.1-builder image and Command Central templates.
 
 Please see [Command Central Docker builder](https://github.com/SoftwareAG/sagdevops-cc-docker-builder) project.
 
@@ -110,4 +117,3 @@ Contact us at [TECHcommunity](mailto:technologycommunity@softwareag.com?subject=
 _______________
 DISCLAIMER
 These tools are provided as-is and without warranty or support. They do not constitute part of the Software AG product suite. Users are free to use, fork and modify them, subject to the license agreement. While Software AG welcomes contributions, we cannot guarantee to include every contribution in the master project.
-

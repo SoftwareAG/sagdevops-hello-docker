@@ -2,7 +2,7 @@ version: "3"
 
 services:
   cc:
-    image: softwareag/commandcentral:10.1.0.1-server
+    image: store/softwareag/commandcentral:10.1.0.1-server
     ports:
       - "8090:8090"
       - "8091:8091"
@@ -10,7 +10,7 @@ services:
       - CC_PASSWORD
       
   test1:
-    image: softwareag/commandcentral:10.1.0.1-node
+    image: store/softwareag/commandcentral:10.1.0.1-node
     ports:
       - "5555:5555" # IS
       - "9000:9000" # UM
@@ -22,14 +22,14 @@ services:
       - cc
 
   test2:
-    image: softwareag/commandcentral:10.1.0.1-node
+    image: store/softwareag/commandcentral:10.1.0.1-node
     environment:
       - CC_AUTO_REGISTER=0 # no auto-registration
     depends_on: 
       - cc
 
   init:
-    image: softwareag/commandcentral:10.1.0.1-server
+    image: store/softwareag/commandcentral:10.1.0.1-server
     environment: 
       CC_SERVER: cc
     command: # any client command againt a remote server
