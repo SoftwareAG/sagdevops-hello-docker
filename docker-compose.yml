@@ -31,9 +31,10 @@ services:
   init:
     image: store/softwareag/commandcentral:10.1.0.1-server
     environment: 
-      CC_SERVER: cc
+      - CC_SERVER=cc
     command: # any client command againt a remote server
       sagcc add landscape nodes alias=test2 url=https://test2:8093 -e 200
     depends_on: 
+      - test1
       - test2
       - cc
