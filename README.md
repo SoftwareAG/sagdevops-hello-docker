@@ -69,6 +69,31 @@ container's internal id.
 
 After a minute or so the managed node status will change to green (ONLINE).
 
+## Create custom Command Central image
+
+You tune up certain aspects of Command Central by modifying its configuration files and creating a custom image with the changes.
+
+For example, you can optimize your local template development or CI process by instructing Command Central to skip restart of runtimes at the end of composite template application.
+
+```dockerfile
+FROM store/softwareag/commandcentral:10.1.0.1-server
+# skip runtimes restart
+RUN echo com.softwareag.platform.management.client.template.composite.skip.restart.runtimes=true>>$SAG_HOME/profiles/CCE/configuration/config.ini
+```
+
+Build the image and run the container:
+
+```bash
+docker build -t my/ccserver:10.1 .
+docker run --name cc -d -p 8091 --network ccnetwork my/ccserver:10.1
+```
+
+Use it in your DEV/CI pipeline:
+
+```bash
+docker exec cc sagcc exec composite templates apply mytemplate
+```
+
 ## Using docker-compose files for dev and test environments
 
 Run example init service from ```docker-compose.yml``` file:
