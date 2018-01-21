@@ -23,7 +23,7 @@ docker network create ccnetwork
 You can start new Command Central server by running the container:
 
 ```bash
-docker run --name cc -d -p 8091 --network ccnetwork softwareag/commandcentral:10.1.0.1-server
+docker run --name cc -d -p 8091 --network ccnetwork store/softwareag/commandcentral:10.1.0.1-server
 ```
 
 Run ```docker port cc``` command to find out its published port
@@ -61,7 +61,7 @@ For development or testing purposes you can launch an empty Software AG managed 
 Run Command Central node container on the 'ccnetwork' network:
 
 ```bash
-docker run --name n1 -d -P --network ccnetwork softwareag/commandcentral:10.1.0.1-node
+docker run --name n1 -d -P --network ccnetwork store/softwareag/commandcentral:10.1.0.1-node
 ```
 
 By default node container will auto register itself with Command Central using
