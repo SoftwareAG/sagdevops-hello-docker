@@ -21,7 +21,7 @@ script:
   - docker exec cc sagcc list landscape nodes n1 -e ONLINE -w 180
   
 after_success:
-  - if [ "$TRAVIS_BRANCH" == "master" ]; then
-    docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";
-    docker push sergeipogrebnyak/commandcentral:$RELEASE;
-    fi
+  # - if [ "$TRAVIS_BRANCH" == "master" ]; then
+  - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";
+  - docker push sergeipogrebnyak/commandcentral:$RELEASE;
+  #  fi
