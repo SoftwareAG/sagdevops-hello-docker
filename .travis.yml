@@ -1,22 +1,27 @@
 sudo: required
 
+env:
+  - RELEASE=10.1
+
 services:
   - docker
 
 before_install:
   - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
-  - docker pull store/softwareag/commandcentral:10.1-server
-  - docker pull store/softwareag/commandcentral:10.1-node
-
-script:
+  - docker pull store/softwareag/commandcentral:$RELEASE-server
+  - docker pull store/softwareag/commandcentral:$RELEASE-node
   - docker network create ccnetwork
-  - docker run --name cc -d -p 8091 --network ccnetwork store/softwareag/commandcentral:10.1-server
-  - docker run --name n1 -d -P --network ccnetwork store/softwareag/commandcentral:10.1-node
-  - docker build -t sergeipogrebnyak/commandcentral:10.1-server .
-  - docker run --name cc -d -p 8091 --network ccnetwork sergeipogrebnyak/commandcentral:10.1-server
-
+  
+script:
+  - docker build -t sergeipogrebnyak/commandcentral:$RELEASE-server .
+  - docker run --name cc -d -p 127.0.0.1:8091:8091 --network ccnetwork sergeipogrebnyak/commandcentral:$RELEASE-server
+  - docker run --name n1 -d --network ccnetwork -e CC_AUTO_REGISTER=0 store/softwareag/commandcentral:$RELEASE-node
+  - docker exec cc sagcc list landscape nodes local -e ONLINE -w 180
+  - docker exec cc sagcc add landscape nodes alias=n1 url=http://n1:8092 -e OK
+  - docker exec cc sagcc list landscape nodes n1 -e ONLINE -w 180
+  
 after_success:
-  - if [ "$TRAVIS_BRANCH" == "master" ]; then
-    docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";
-    docker push sergeipogrebnyak/commandcentral:10.1-server
-    fi
+  # - if [ "$TRAVIS_BRANCH" == "master" ]; then
+  - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";
+  - docker push sergeipogrebnyak/commandcentral:$RELEASE-server;
+  #  fi
