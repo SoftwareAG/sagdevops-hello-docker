@@ -38,41 +38,6 @@ To check the Command Central container logs run ```docker logs cc```.
 The output should look similiar to this:
 
 ```bash
-Command Central is ONLINE
-List of installed products:
-Product Display Name                                                                            Version
-Core Installer Files | Software AG Installer                                                    10.2.0.0.201
-Infrastructure | Command Central | Command Line Tools                                           10.2.0.0.163
-Infrastructure | Command Central | Server                                                       10.2.0.0.186
-Infrastructure | Java Package                                                                   1.8.0.0.105
-Infrastructure | Libraries | Installer Libraries                                                10.2.0.0.209
-Infrastructure | Libraries | Migration Framework Libraries                                      10.2.0.0.121
-Infrastructure | Libraries | Third-Party Libraries | log4j Libraries                            10.2.0.0.27
-Infrastructure | Libraries | Third-Party Libraries | Tool for Apache Ant                        10.2.0.0.27
-Infrastructure | Libraries | Third-Party Libraries | Tool for Java Service Wrapper              10.2.0.0.27
-Infrastructure | License | Agreement                                                            10.2.0.0.12
-Infrastructure | License | Verifier                                                             5.6.5.0.718
-Infrastructure | Platform Manager                                                               10.2.0.0.190
-Infrastructure | Platform Manager Plug-ins | Command Central Plug-in                            10.2.0.0.186
-Infrastructure | Shared Platform | Bundles | Asset Distribution Bundles                         10.2.0.0.176
-Infrastructure | Shared Platform | Bundles | Common Landscape Asset Registry                    10.2.0.0.229
-Infrastructure | Shared Platform | Bundles | Deployer and Asset Build Environment Bundles       10.2.0.0.184
-Infrastructure | Shared Platform | Bundles | Installer Bundles                                  10.2.0.0.209
-Infrastructure | Shared Platform | Bundles | License Validator Bundles                          5.6.5.0.718
-Infrastructure | Shared Platform | Bundles | Shared Bundles                                     10.2.0.0.27
-Infrastructure | Shared Platform | Bundles | Terracotta | BigMemory Max Bundles                 4.3.5.0.34
-Infrastructure | Shared Platform | Bundles | Web Services Stack Bundles                         10.2.0.0.334
-Infrastructure | Shared Platform | Platform                                                     10.2.0.0.344
-Update Manager                                                                                  10.1.0.0.21
-List of installed fixes:
-Fix Display Name                                                Fix Version
-Command Central 10.2.0 FIX 1                                    10.2.0.0001-0195
-Command Central WebUI 10.2.0 FIX 1                              10.2.0.0001-0178
-Command Line Tools 10.2.0 FIX 1                                 10.2.0.0001-0169
-Platform Manager 10.2.0 FIX 1                                   10.2.0.0001-0198
-Platform Manager Shared 10.2.0 FIX 1                            10.2.0.0001-0068
-Command Central Plug-in to Platform Manager 10.2.0 FIX 1        10.2.0.0001-0195
-SUM API 10.2.0 FIX 1                                            10.2.0.0001-0150
 2018/04/17 23:00:42 INFO  #      Command Central version: 10.2.0.0001-0195
 ```
 
