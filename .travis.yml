@@ -5,7 +5,7 @@ env:
     - TARGET_REGISTRY=sergeipogrebnyak
   matrix:
     - RELEASE=10.2 SOURCE_REGISTRY=softwareag
-    - RELEASE=10.1 SOURCE_REGISTRY=store/softwareag
+    - RELEASE=10.1 SOURCE_REGISTRY=softwareag
 
 services:
   - docker
