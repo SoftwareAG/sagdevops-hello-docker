@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/SoftwareAG/sagdevops-hello-docker.svg?branch=master)](https://travis-ci.org/SoftwareAG/sagdevops-hello-docker)
+
 # Command Central Docker images
 
 ## Configuration
