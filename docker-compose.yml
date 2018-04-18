@@ -2,8 +2,8 @@ version: "3"
 
 services:
   cc:
-    #image: store/softwareag/commandcentral:10.2-server
-    image: softwareag/commandcentral:10.2-server
+    image: store/softwareag/commandcentral:10.2-server
+    # image: softwareag/commandcentral:10.2-server
     ports:
       - "8090:8090"
       - "8091:8091"
@@ -11,8 +11,8 @@ services:
       - CC_PASSWORD
       
   test1:
-#    image: store/softwareag/commandcentral:10.2-node
-    image: softwareag/commandcentral:10.2-node
+    image: store/softwareag/commandcentral:10.2-node
+    # image: softwareag/commandcentral:10.2-node
     ports:
       - "5555:5555" # IS
       - "9000:9000" # UM
@@ -24,8 +24,8 @@ services:
       - cc
 
   init:
-#    image: store/softwareag/commandcentral:10.2-server
-    image: softwareag/commandcentral:10.2-server
+    image: store/softwareag/commandcentral:10.2-server
+    # image: softwareag/commandcentral:10.2-server
     environment: 
       - CC_SERVER=cc
       - CC_PASSWORD
