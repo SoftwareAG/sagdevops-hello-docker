@@ -9,7 +9,7 @@ Login to Docker with your Docker ID from your console and verify you can downloa
 
 ```bash
 docker login
-docker pull store/softwareag/commandcentral:10.1.0.1-server
+docker pull store/softwareag/commandcentral:10.1-server
 ```
 
 ## Starting a default Command Central server
@@ -23,7 +23,7 @@ docker network create ccnetwork
 You can start new Command Central server by running the container:
 
 ```bash
-docker run --name cc -d -p 8091 --network ccnetwork store/softwareag/commandcentral:10.1.0.1-server
+docker run --name cc -d -p 8091 --network ccnetwork store/softwareag/commandcentral:10.1-server
 ```
 
 Run ```docker port cc``` command to find out its published port
@@ -61,7 +61,7 @@ For development or testing purposes you can launch an empty Software AG managed 
 Run Command Central node container on the 'ccnetwork' network:
 
 ```bash
-docker run --name n1 -d -P --network ccnetwork store/softwareag/commandcentral:10.1.0.1-node
+docker run --name n1 -d -P --network ccnetwork store/softwareag/commandcentral:10.1-node
 ```
 
 By default node container will auto register itself with Command Central using
@@ -76,7 +76,7 @@ You tune up certain aspects of Command Central by modifying its configuration fi
 For example, you can optimize your local template development or CI process by instructing Command Central to skip restart of runtimes at the end of composite template application.
 
 ```dockerfile
-FROM store/softwareag/commandcentral:10.1.0.1-server
+FROM store/softwareag/commandcentral:10.1-server
 # skip runtimes restart
 RUN echo com.softwareag.platform.management.client.template.composite.skip.restart.runtimes=true>>$SAG_HOME/profiles/CCE/configuration/config.ini
 ```
@@ -133,7 +133,7 @@ Please see [Command Central](https://github.com/SoftwareAG/sagdevops-cc-server) 
 ## Building Docker images using Command Central Builder
 
 You can build custom images with Software AG software using
-softwareag/commandcentral:10.1.0.1-builder image and Command Central templates.
+softwareag/commandcentral:10.1-builder image and Command Central templates.
 
 Please see [Command Central Docker builder](https://github.com/SoftwareAG/sagdevops-cc-docker-builder) project.
 
