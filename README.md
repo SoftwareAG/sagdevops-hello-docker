@@ -60,7 +60,7 @@ Simply point to running SPM host:port:
 docker exec cc sagcc add landscape nodes alias=mynode1 url=http://IP:8092 -e OK
 ```
 
-Succesfull registration will report ```200 OK```
+Successfull registration will report ```200 OK```
 
 Command Central Web UI will show this managed node under Installations tab with all discovered managed instances under Instances tab.
 
