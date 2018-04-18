@@ -9,8 +9,7 @@ Login to Docker with your Docker ID from your console and verify you can downloa
 
 ```bash
 docker login
-docker pull store/softwareag/commandcentral:10.1-server
-```
+docker pull store/softwareag/commandcentral:10.2-server
 
 ## Starting a default Command Central server
 
@@ -23,7 +22,7 @@ docker network create ccnetwork
 You can start new Command Central server by running the container:
 
 ```bash
-docker run --name cc -d -p 8091 --network ccnetwork store/softwareag/commandcentral:10.1-server
+docker run --name cc -d -p 8091 --network ccnetwork store/softwareag/commandcentral:10.2-server
 ```
 
 Run ```docker port cc``` command to find out its published port
@@ -33,7 +32,15 @@ Run ```docker port cc``` command to find out its published port
 ```
 
 This will start an empty Command Central with the HTTPS port exposed.
-Open published port in the browser, for example https://0.0.0.0:32769/ 
+
+To check the Command Central container logs run ```docker logs cc```.
+The output should look similiar to this:
+
+```bash
+2018/04/17 23:00:42 INFO  #      Command Central version: 10.2.0.0001-0195
+```
+
+Open published port in the browser, for example https://0.0.0.0:32769/
 to see Command Central login page.
 
 Login with default credentials as Administrator/manage.
@@ -61,7 +68,7 @@ For development or testing purposes you can launch an empty Software AG managed 
 Run Command Central node container on the 'ccnetwork' network:
 
 ```bash
-docker run --name n1 -d -P --network ccnetwork store/softwareag/commandcentral:10.1-node
+docker run --name n102 -d -P --network ccnetwork store/softwareag/commandcentral:10.2-node
 ```
 
 By default node container will auto register itself with Command Central using
@@ -69,14 +76,22 @@ container's internal id.
 
 After a minute or so the managed node status will change to green (ONLINE).
 
+NOTE that you can add launch and register older versions of Softwarte AG managed installation
+for which a corresponding docker image is available. For example
+
+```bash
+docker run --name n101 -d -P --network ccnetwork store/softwareag/commandcentral:10.1-node
+```
+
 ## Create custom Command Central image
 
-You tune up certain aspects of Command Central by modifying its configuration files and creating a custom image with the changes.
+You can tune up certain aspects of Command Central by modifying its configuration files and creating a custom image with the changes.
 
-For example, you can optimize your local template development or CI process by instructing Command Central to skip restart of runtimes at the end of composite template application.
+For example, you can optimize Command Central for template development or CI process by instructing Command Central to skip restart
+of runtimes at the end of composite template application, register repositories and license files:
 
 ```dockerfile
-FROM store/softwareag/commandcentral:10.1-server
+FROM store/softwareag/commandcentral:10.2-server
 # skip runtimes restart
 RUN echo com.softwareag.platform.management.client.template.composite.skip.restart.runtimes=true>>$SAG_HOME/profiles/CCE/configuration/config.ini
 ```
@@ -84,14 +99,14 @@ RUN echo com.softwareag.platform.management.client.template.composite.skip.resta
 Build the image and run the container:
 
 ```bash
-docker build -t my/ccserver:10.1 .
-docker run --name cc -d -p 8091 --network ccnetwork my/ccserver:10.1
+docker build -t my/ccserver:10.2 .
+docker run --name mycc -d -p 8091 --network ccnetwork my/ccserver:10.2
 ```
 
 Use it in your DEV/CI pipeline:
 
 ```bash
-docker exec cc sagcc exec composite templates apply mytemplate
+docker exec mycc sagcc exec composite templates apply mytemplate
 ```
 
 ## Using docker-compose files for dev and test environments
@@ -99,28 +114,20 @@ docker exec cc sagcc exec composite templates apply mytemplate
 Run example init service from ```docker-compose.yml``` file:
 
 ```bash
+export EMPOWER_USERNAME=you@company.com
+export EMPOWER_PASSWORD=****
+export CC_PASSWORD=****
+
 docker-compose run --rm init
 ```
 
-The init service will bring up Command Central container and two
-test managed nodes.
+The init service will:
+
+* Create and start Command Central container
+* Create, start and register a test managed node
+* Register master product and fix repositories with provided Empower credentials
 
 When it's done running open [Command Central Web UI](https://0.0.0.0:8091)
-
-Command Central will show two nodes:
-
-* one auto-registered with container id as node alias
-* second one registered with as 'test2'
-
-After a minute or so they both will come online.
-
-Install, patch, configure and use Software AG software on these
-test nodes. Recycle them when no longer needed:
-
-```bash
-docker-compose stop test1 test2
-docker-compose rm test1 test2
-```
 
 ## Configuring Command Central
 
@@ -133,7 +140,7 @@ Please see [Command Central](https://github.com/SoftwareAG/sagdevops-cc-server) 
 ## Building Docker images using Command Central Builder
 
 You can build custom images with Software AG software using
-softwareag/commandcentral:10.1-builder image and Command Central templates.
+softwareag/commandcentral:10.2-builder image and Command Central templates.
 
 Please see [Command Central Docker builder](https://github.com/SoftwareAG/sagdevops-cc-docker-builder) project.
 
