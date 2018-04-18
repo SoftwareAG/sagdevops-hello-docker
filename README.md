@@ -10,6 +10,7 @@ Login to Docker with your Docker ID from your console and verify you can downloa
 ```bash
 docker login
 docker pull store/softwareag/commandcentral:10.2-server
+```
 
 ## Starting a default Command Central server
 
