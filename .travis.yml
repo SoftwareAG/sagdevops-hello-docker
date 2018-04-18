@@ -17,12 +17,15 @@ before_install:
   - docker network create ccnetwork
   
 script:
+  - docker-compose run --rm init
+  - docker-compose down
   - docker build --build-arg SOURCE_REGISTRY=$SOURCE_REGISTRY -t $TARGET_REGISTRY/commandcentral:$RELEASE-server .
   - docker run --name cc -d -p 127.0.0.1:8091:8091 --network ccnetwork $TARGET_REGISTRY/commandcentral:$RELEASE-server
   - docker run --name n1 -d --network ccnetwork -e CC_AUTO_REGISTER=0 $SOURCE_REGISTRY/commandcentral:$RELEASE-node
   - docker exec cc sagcc list landscape nodes local -e ONLINE -w 180
   - docker exec cc sagcc add landscape nodes alias=n1 url=http://n1:8092 -e OK
   - docker exec cc sagcc list landscape nodes n1 -e ONLINE -w 180
+  - docker stop n1 cc && docker rm n1 cc
   
 after_success:
   # - if [ "$TRAVIS_BRANCH" == "master" ]; then

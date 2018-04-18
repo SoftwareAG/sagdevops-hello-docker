@@ -157,7 +157,7 @@ export CC_PASSWORD=****
 docker-compose run --rm init
 ```
 
-The init service will
+The init service will:
 
 * Create and start Command Central container
 * Create, start and register a test managed node

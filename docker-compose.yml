@@ -2,7 +2,8 @@ version: "3"
 
 services:
   cc:
-    image: store/softwareag/commandcentral:10.2-server
+    #image: store/softwareag/commandcentral:10.2-server
+    image: softwareag/commandcentral:10.2-server
     ports:
       - "8090:8090"
       - "8091:8091"
@@ -10,7 +11,8 @@ services:
       - CC_PASSWORD
       
   test1:
-    image: store/softwareag/commandcentral:10.2-node
+#    image: store/softwareag/commandcentral:10.2-node
+    image: softwareag/commandcentral:10.2-node
     ports:
       - "5555:5555" # IS
       - "9000:9000" # UM
@@ -22,18 +24,19 @@ services:
       - cc
 
   init:
-    image: store/softwareag/commandcentral:10.2-server
+#    image: store/softwareag/commandcentral:10.2-server
+    image: softwareag/commandcentral:10.2-server
     environment: 
       - CC_SERVER=cc
       - CC_PASSWORD
       - EMPOWER_USERNAME
       - EMPOWER_PASSWORD
+    depends_on: 
+      - cc
+      - test1
     command: >
       bash -c "
       sagcc list landscape nodes --wait-for-cc &&
       sagcc add repository products name=webMethods-10.2 location=http://sdc.softwareag.com/dataservewebM102/repository username=$EMPOWER_USERNAME password=$EMPOWER_PASSWORD &&
       sagcc add repository fixes name=Empower location=http://sdc.softwareag.com/updatges/prodRepo username=$EMPOWER_USERNAME password=$EMPOWER_PASSWORD
       "
-    depends_on: 
-      - cc
-      - test1
