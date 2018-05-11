@@ -17,8 +17,8 @@ before_install:
   - docker network create ccnetwork
   
 script:
-  # - docker-compose run --rm init
-  # - docker-compose down
+  - docker-compose run --rm init
+  - docker-compose down
   - docker build --build-arg SOURCE_REGISTRY=$SOURCE_REGISTRY --build-arg RELEASE=$RELEASE -t $TARGET_REGISTRY/commandcentral:$RELEASE-server .
   - docker run --name cc -d -p 127.0.0.1:8091:8091 --network ccnetwork $TARGET_REGISTRY/commandcentral:$RELEASE-server
   - docker run --name n1 -d --network ccnetwork -e CC_AUTO_REGISTER=0 $SOURCE_REGISTRY/commandcentral:$RELEASE-node
