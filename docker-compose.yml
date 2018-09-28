@@ -57,13 +57,3 @@ services:
       sagcc add repository fixes name=fixes location=http://sdc.softwareag.com/updates/prodRepo username=$EMPOWER_USR password=$EMPOWER_PSW ||
       sagcc list repository fixes -e fixes &&
       sagcc list repository fixes content fixes nodeAlias=node1 products=INSTALLED -e $TAG"
-
-  # antcc:
-  #   #image: ${CC_REG}/commandcentral-client:$TAG
-  #   image: 
-  #   environment: 
-  #     - CC_SERVER=cc
-  #     - CC_PASSWORD
-  #   depends_on: 
-  #     - cc
-  #   command: antcc up

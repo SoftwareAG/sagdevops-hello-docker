@@ -23,13 +23,14 @@
 
 ## Create subscription on Docker Store
 
-* Login to Docker Store with your Docker ID
-* Open https://store.docker.com/images/softwareag-commandcentral
-* `Checkout` and accept license agreement to get access
+* Login to [Docker Store](https://store.docker.com) with your Docker ID
+* Open [Command Central product](https://store.docker.com/images/softwareag-commandcentral)
+* `Checkout`, accept the license agreement to get access to Command Central images
 
 ## Preparation
 
-Login to Docker with your Docker ID from your console and verify you can download the images:
+Login to Docker with your Docker ID on the target machine and verify you can download the images
+from the Docker Store:
 
 ```bash
 docker login
@@ -38,7 +39,9 @@ docker pull store/softwareag/commandcentral-client:10.3
 
 ## Using docker-compose to standup basic dev or test environment
 
-Run example init service from `docker-compose.yml` file:
+> IMPORTANT: Empower SDC credentials are required to register product and fix repositories
+
+Run example init service from [docker-compose.yml](docker-compose.yml) file:
 
 ```bash
 export EMPOWER_USR=you@company.com
@@ -51,15 +54,18 @@ docker-compose run --rm init
 The above command will:
 
 * Create and start Command Central container
-* Create, start and register a test managed node as `node1`
-* Register master product and fix repositories with provided Empower credentials
+* Create, start and register a test managed node as `node1` alias
+* Register master `products` and `fixes` repositories using provided Empower credentials
 * Verify `node1` and repositories are registed and accessible
 
-When it's done running open [Command Central Web UI](https://0.0.0.0:8091)
+When the above command successfully completes, open [Command Central Web UI](https://0.0.0.0:8091)
+and login as Administrator and `CC_PASSWORD` that you used.
 
 ## Developing templates and Dockerizing your applications
 
-Please see [Command Central DevOps Templates](https://github.com/SoftwareAG/sagdevops-templates) project.
+Please see [Software AG DevOps Templates](https://github.com/SoftwareAG/sagdevops-templates) project
+for details on how use default Command Central templates for template-based provisioning, customize them
+and create your own templates, as well as build default and custom Docker images for your applications.
 
 _______________
 Contact us at [TECHcommunity](mailto:technologycommunity@softwareag.com?subject=Github/SoftwareAG) if you have any questions.

@@ -19,8 +19,9 @@
 
 sudo: required
 
-#env:
-#  global:
+env:
+ global:
+    - CC_PASSWORD=manage123
 #    - CC_REG=softwareag
 #    - REG=sergeipogrebnyak
 
