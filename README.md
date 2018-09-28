@@ -37,7 +37,7 @@ docker login
 docker pull store/softwareag/commandcentral-client:10.3
 ```
 
-## Using docker-compose to standup basic dev or test environment
+## Using docker-compose to stand up basic dev or test environment
 
 > IMPORTANT: Empower SDC credentials are required to register product and fix repositories
 
@@ -59,7 +59,7 @@ The above command will:
 * Verify `node1` and repositories are registed and accessible
 
 When the above command successfully completes, open [Command Central Web UI](https://0.0.0.0:8091)
-and login as Administrator and `CC_PASSWORD` that you used.
+and login as Administrator and `CC_PASSWORD`.
 
 ## Developing templates and Dockerizing your applications
 
