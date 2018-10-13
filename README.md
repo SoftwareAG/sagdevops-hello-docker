@@ -49,6 +49,8 @@ export EMPOWER_PSW=****
 export CC_PASSWORD=****
 
 docker-compose run --rm init
+...
+INIT SUCCESSFUL
 ```
 
 The above command will:
