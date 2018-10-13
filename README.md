@@ -17,7 +17,7 @@
 
 -->
 
-[![Build Status](https://travis-ci.org/SoftwareAG/sagdevops-hello-docker.svg?branch=develop)](https://travis-ci.org/SoftwareAG/sagdevops-hello-docker)
+[![Build Status](https://travis-ci.org/SoftwareAG/sagdevops-hello-docker.svg)](https://travis-ci.org/SoftwareAG/sagdevops-hello-docker)
 
 # Command Central Docker images
 

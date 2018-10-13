@@ -21,14 +21,18 @@ version: "3.2"
 
 services:
   cc:
-    image: ${CC_REG}/commandcentral-server:$TAG
+    image: ${CC_REG}/commandcentral-server:${CC_TAG}
     ports:
       - 8091:8091
     environment:
       - CC_PASSWORD
+      - REPO_USERNAME=${EMPOWER_USR}
+      - REPO_PASSWORD=${EMPOWER_PSW}
+      - REPO_PRODUCT_URL=https://sdc.softwareag.com/dataservewebM103/repository
+      - REPO_FIX_URL=https://sdc.softwareag.com/updates/prodRepo
 
   node1:
-    image: ${CC_REG}/commandcentral-node:$TAG
+    image: ${CC_REG}/commandcentral-node:${CC_TAG}
     hostname: node1
     environment:
       - CC_AUTO_REGISTER=1 # auto-registration
@@ -38,7 +42,7 @@ services:
       - cc
 
   init:
-    image: ${CC_REG}/commandcentral-client:$TAG
+    image: ${CC_REG}/commandcentral-client:${CC_TAG}
     environment: 
       - CC_SERVER=cc
       - CC_PASSWORD
@@ -46,14 +50,12 @@ services:
       - cc
       - node1
     command: >
-      bash -c "
-      echo 'Waiting for node1 auto-register ...' &&
+      bash -c '
+      echo "Waiting for node1 auto-register ..." &&
       sagcc list landscape nodes --wait-for-cc 240 -e node1 -w 240 &&
-      echo 'Registering and listing products repository ...' &&
-      sagcc add repository products name=products location=http://sdc.softwareag.com/dataserve${REPO_NAME}/repository username=$EMPOWER_USR password=$EMPOWER_PSW ||
+      echo "Waiting for repositories init ..." &&
       sagcc list repository products -e products &&
-      sagcc list repository products content products -e $TAG &&
-      echo 'Registering and listing fix repository ...' &&
-      sagcc add repository fixes name=fixes location=http://sdc.softwareag.com/updates/prodRepo username=$EMPOWER_USR password=$EMPOWER_PSW ||
       sagcc list repository fixes -e fixes &&
-      sagcc list repository fixes content fixes nodeAlias=node1 products=INSTALLED -e $TAG"
+      echo "Checking for new fixes ..." &&
+      sagcc list repository fixes content fixes nodeAlias=node1 products=INSTALLED &&
+      echo "INIT SUCCESSFUL"'
