@@ -17,50 +17,45 @@
 #
 ###############################################################################
 
-version: "3"
+version: "3.2"
 
 services:
   cc:
-    image: store/softwareag/commandcentral:10.2-server
+    image: ${CC_REG}/commandcentral-server:${CC_TAG}
     ports:
-      - "8091:8091"
-      - "8092:8092"
+      - 8091:8091
     environment:
       - CC_PASSWORD
-      
-  test102:
-    image: store/softwareag/commandcentral:10.2-node
-    environment:
-      - CC_AUTO_REGISTER=1 # auto-registration
-      - CC_SERVER=cc
-      - CC_PASSWORD
-    depends_on: 
-      - cc
+      - REPO_USERNAME=${EMPOWER_USR}
+      - REPO_PASSWORD=${EMPOWER_PSW}
+      - REPO_PRODUCT_URL=https://sdc-hq.softwareag.com/dataservewebM103/repository/
+      - REPO_FIX_URL=https://sdc.softwareag.com/updates/prodRepo
 
-  test101:
-    image: store/softwareag/commandcentral:10.1-node
+  node1:
+    image: ${CC_REG}/commandcentral-node:${CC_TAG}
+    hostname: node1
     environment:
       - CC_AUTO_REGISTER=1 # auto-registration
-      - CC_SERVER=cc
-      - CC_PASSWORD
+      - CC_SERVER=cc       # with this CC server
+      - CC_PASSWORD        # using this CC Administrator password
     depends_on: 
       - cc
 
   init:
-    image: store/softwareag/commandcentral:10.2-server
+    image: ${CC_REG}/commandcentral-client:${CC_TAG}
     environment: 
       - CC_SERVER=cc
       - CC_PASSWORD
-      - EMPOWER_USERNAME
-      - EMPOWER_PASSWORD
     depends_on: 
       - cc
-      - test101
-      - test102
+      - node1
     command: >
-      bash -c "
-      sagcc list landscape nodes --wait-for-cc &&
-      sagcc add repository products name=webMethods-10.2 location=http://sdc.softwareag.com/dataservewebM102/repository username=$EMPOWER_USERNAME password=$EMPOWER_PASSWORD &&
-      sagcc add repository products name=webMethods-10.1 location=http://sdc.softwareag.com/dataservewebM101/repository username=$EMPOWER_USERNAME password=$EMPOWER_PASSWORD &&
-      sagcc add repository fixes name=Empower location=http://sdc.softwareag.com/updatges/prodRepo username=$EMPOWER_USERNAME password=$EMPOWER_PASSWORD
-      "
+      bash -c '
+      echo "Waiting for node1 auto-register ..." &&
+      sagcc list landscape nodes --wait-for-cc 240 -e node1 -w 240 &&
+      echo "Waiting for repositories init ..." &&
+      sagcc list repository products -e products &&
+      sagcc list repository fixes -e fixes &&
+      echo "Checking for new fixes ..." &&
+      sagcc list repository fixes content fixes nodeAlias=node1 products=INSTALLED &&
+      echo "INIT SUCCESSFUL"'
