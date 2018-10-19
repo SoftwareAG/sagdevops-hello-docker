@@ -63,6 +63,17 @@ The above command will:
 When the above command successfully completes, open [Command Central Web UI](https://0.0.0.0:8091)
 and login as Administrator and `CC_PASSWORD`.
 
+## Troubleshooting
+
+1. Check status of the containers by running `docker-compose ps` command
+
+If `cc` service has existed with exit code 100, this means the initialization of the Command Central container has failed
+
+2. Check the Command Central container logs by running `docker-compose logs cc` command.
+
+If the failed initialization refers to repository connectivity error double check that you provided valid Empower credentials
+using `EMPOWER_USR` and `EMPOWER_PSW`
+
 ## Developing templates and Dockerizing your applications
 
 Please see [Software AG DevOps Templates](https://github.com/SoftwareAG/sagdevops-templates) project
