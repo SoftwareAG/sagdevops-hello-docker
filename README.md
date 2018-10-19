@@ -67,7 +67,7 @@ and login as Administrator and `CC_PASSWORD`.
 
 1. Check status of the containers by running `docker-compose ps` command
 
-If `cc` service has existed with exit code 100, this means the initialization of the Command Central container has failed
+If `cc` service has exited with exit code 100, this means the initialization of the Command Central container has failed
 
 2. Check the Command Central container logs by running `docker-compose logs cc` command.
 
