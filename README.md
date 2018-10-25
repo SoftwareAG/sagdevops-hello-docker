@@ -43,10 +43,24 @@ docker pull store/softwareag/commandcentral-client:10.3
 
 Run example init service from [docker-compose.yml](docker-compose.yml) file:
 
+On Linux, Mac
+
 ```bash
 export EMPOWER_USR=you@company.com
 export EMPOWER_PSW=****
 export CC_PASSWORD=****
+
+docker-compose run --rm init
+...
+INIT SUCCESSFUL
+```
+
+On Windows:
+
+```shell
+set EMPOWER_USR=you@company.com
+set EMPOWER_PSW=****
+set CC_PASSWORD=****
 
 docker-compose run --rm init
 ...
@@ -60,8 +74,27 @@ The above command will:
 * Register master `products` and `fixes` repositories using provided Empower credentials
 * Verify `node1` and repositories are registed and accessible
 
+> NOTE: Command Central container (`cc` service) performs all the initialization on its own. The `init` service is run for verification purpose only.
+
 When the above command successfully completes, open [Command Central Web UI](https://0.0.0.0:8091)
 and login as Administrator and `CC_PASSWORD`.
+
+## Persistance
+
+Command Central container uses named volumes for persisting data and configuration. You can list the created volumes
+using `docker volume ls` command:
+
+```bash
+docker volume ls
+DRIVER              VOLUME NAME
+local               sagdevops-cc-server_cce_conf
+local               sagdevops-cc-server_cce_data
+local               sagdevops-cc-server_spm_conf
+local               sagdevops-cc-server_spm_data
+```
+
+Any changes you make within Command Central container are peristed in these volumes.
+The containers can be completely destroyed, recreated, upgraded and the configuration and data will be preserved.
 
 ## Troubleshooting
 
@@ -71,7 +104,7 @@ If `cc` service has exited with exit code 100, this means the initialization of 
 
 2. Check the Command Central container logs by running `docker-compose logs cc` command.
 
-If the failed initialization refers to repository connectivity error double check that you provided valid Empower credentials
+If the failed initialization refers to repository connectivity error, double check that you provided valid Empower credentials
 using `EMPOWER_USR` and `EMPOWER_PSW`
 
 ## Developing templates and Dockerizing your applications
