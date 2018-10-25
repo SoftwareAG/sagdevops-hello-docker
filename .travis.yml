@@ -22,7 +22,6 @@ sudo: required
 env:
  global:
     - CC_PASSWORD=manage123
-#    - CC_REG=softwareag
 
 services:
   - docker
